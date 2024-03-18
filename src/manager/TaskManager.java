@@ -1,3 +1,10 @@
+package manager;
+
+import model.Epic;
+import model.SubTask;
+import model.Task;
+import model.TaskStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +46,8 @@ public class TaskManager {
         tasks.remove(id);
     }
 
-    public void updateTask(Task task) {  // Обноваление задачи
-        task.setId(taskId);
+    public void updateTask(Task task) {  // Обновление задачи
+        task.setId(task.getId());
         tasks.put(task.getId(), task);
     }
 
@@ -109,6 +116,7 @@ public class TaskManager {
 
     public void deleteAllEpic() {   //Удаление всех эпиков
         epics.clear();
+        subtasks.clear();
     }
 
 
@@ -122,6 +130,7 @@ public class TaskManager {
         Epic epic = epics.get(subTask.getEpicId());
         if (epic != null) {
             epic.getSubTasks().add(subTask.getId());
+            updateEpicStatus(epic.getId()); //  Добавлен пересчет статуса эпика
         }
         return subTask;
     }
@@ -134,12 +143,21 @@ public class TaskManager {
         subtasks.put(subTask.getId(), subTask);
         Epic epic = epics.get(subTask.getEpicId());
         if (epic != null) {
-            epic.updateStatus(this);
+            epic.getStatus();
+            updateEpicStatus(epic.getId());
         }
     }
 
     public void deleteSubTask(int id) {  // Удаление подзадачи по ID
         subtasks.remove(id);
+        // Пересчитываем статус эпика
+        for (Epic epic : epics.values()) {
+            List<Integer> subTaskIds = epic.getSubTasks();
+            if (subTaskIds.contains(id)) {
+                updateEpicStatus(epic.getId());
+                break;
+            }
+        }
     }
 
     public List<SubTask> getAllSubTasks() {  // Получение всех подзадач
@@ -148,13 +166,12 @@ public class TaskManager {
 
     public void deleteAllSubTask() {  // Удаление всех подзадач
         subtasks.clear();
+        // Пересчитываем статусы эпиков
+        for (Epic epic : epics.values()) {
+            updateEpicStatus(epic.getId());
+        }
     }
 
 
-    public void deleteAll() {  // Удаление задач всех типов
-        tasks.clear();
-        epics.clear();
-        subtasks.clear();
-    }
 
 }

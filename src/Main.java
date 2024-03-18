@@ -1,3 +1,8 @@
+import manager.TaskManager;
+import model.Epic;
+import model.SubTask;
+import model.Task;
+import model.TaskStatus;
 
 public class Main {
     public static void main(String[] args) {
@@ -8,15 +13,15 @@ public class Main {
         Task task1 = new Task("Сделать уборку", "Сделать уборку за 2 часа", TaskStatus.NEW);
         Task task2 = new Task("Сходить в магазин", "Купить еду в магазине", TaskStatus.NEW);
 
-        // Добавляем задачи в TaskManager
+        // Добавляем задачи в manager.TaskManager
         taskManager.addTask(task1);
         taskManager.addTask(task2);
 
         // Создаем эпики
-        Epic epic1 = new Epic("Построить дом", "Построить дом по новой технологии", TaskStatus.NEW);
-        Epic epic2 = new Epic("Написать список целей", "Написать список целей на текущий год", TaskStatus.NEW);
+        Epic epic1 = new Epic("Построить дом", "Построить дом по новой технологии");
+        Epic epic2 = new Epic("Написать список целей", "Написать список целей на текущий год");
 
-        // Добавляем эпики в TaskManager
+        // Добавляем эпики в manager.TaskManager
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
 
@@ -24,7 +29,7 @@ public class Main {
         SubTask subtask1 = new SubTask("Заложить фундамент", "Заложить фундамент под будущий дом", TaskStatus.NEW, epic1.getId());
         SubTask subtask2 = new SubTask("Покрасить стены", "Обработать спец материалом стены и покрасить их до зимы", TaskStatus.NEW, epic1.getId());
 
-        // Добавляем подзадачи в TaskManager
+        // Добавляем подзадачи в manager.TaskManager
         taskManager.addSubTask(subtask1);
         taskManager.addSubTask(subtask2);
 
