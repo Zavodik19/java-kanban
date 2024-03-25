@@ -1,7 +1,5 @@
 package model;
 
-import manager.TaskManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
