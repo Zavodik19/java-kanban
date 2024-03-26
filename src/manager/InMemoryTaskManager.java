@@ -35,9 +35,8 @@ public class InMemoryTaskManager implements TaskManager {
     // -------- ТАСКИ ----------
 
     @Override
-    public Task addTask(Task task) {     // Добавление задачи и присваивание статуса NEW
+    public Task addTask(Task task) {     // Добавление задачи (Убран принудительно установленный статус)
         task.setId(generateId());
-        task.setStatus(TaskStatus.NEW);
         tasks.put(task.getId(), task);
         return task;
     }
@@ -75,9 +74,8 @@ public class InMemoryTaskManager implements TaskManager {
 // -------- ЭПИКИ ----------
 
     @Override
-    public Epic addEpic(Epic epic) {   // Добавление эпика и присваивание статуса NEW
+    public Epic addEpic(Epic epic) {   // Добавление эпика
         epic.setId(generateId());
-        epic.setStatus(TaskStatus.NEW);
         epics.put(epic.getId(), epic);
         return epic;
     }
@@ -145,16 +143,17 @@ public class InMemoryTaskManager implements TaskManager {
     // -------- САБТАСКИ ----------
 
     @Override
-    public SubTask addSubTask(SubTask subTask) {  // Добавление подзаадчи
+    public SubTask addSubTask(SubTask subTask) {  // Добавление подзадачи
         subTask.setId(generateId());
         subtasks.put(subTask.getId(), subTask);
         // Добавляем идентификатор подзадачи в список подзадач эпика
-        Epic epic = epics.get(subTask.getEpicId());
-        if (epic != null) {
+        if (epics.containsKey(subTask.getEpicId())) {
+            Epic epic = epics.get(subTask.getEpicId());
             epic.getSubTasks().add(subTask.getId());
-            updateEpicStatus(epic.getId()); //  Добавлен пересчет статуса эпика
+            updateEpicStatus(epic.getId());
+            return subTask;
         }
-        return subTask;
+        return null;
     }
 
     @Override
