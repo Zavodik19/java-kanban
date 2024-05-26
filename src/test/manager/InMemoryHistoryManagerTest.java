@@ -1,13 +1,11 @@
-package Test.manager;
+package test.manager;
 
 import manager.HistoryManager;
 import manager.InMemoryHistoryManager;
 import model.Task;
 import model.TaskStatus;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Node;
 
 import java.util.List;
 
