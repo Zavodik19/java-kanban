@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryHistoryManagerTest {
 
     @Test
-    void addAndGetHistory() {
+    public void addAndGetHistory() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
         Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
         task1.setId(1);
@@ -29,7 +29,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void remove() {
+    public void remove() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
         Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
         task1.setId(1);
@@ -48,7 +48,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeNode() {
+    public void removeNode() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
         Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
         task1.setId(1);
