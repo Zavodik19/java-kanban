@@ -1,5 +1,4 @@
-package test.model;
-
+package task;
 
 import model.Task;
 import model.TaskStatus;

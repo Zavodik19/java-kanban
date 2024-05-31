@@ -1,9 +1,8 @@
-package test.model;
+package task;
 
 import model.SubTask;
 import model.TaskStatus;
 import org.junit.jupiter.api.Test;
-
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 

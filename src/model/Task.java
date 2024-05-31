@@ -4,13 +4,10 @@ import java.util.Objects;
 
 public class Task {
 
-
-
     private int id;              // Уникальный идентификатор задачи для её поиска
     private String name;         // Название задачи
     private String description;  // Описание задачи и ее детали
     private TaskStatus status;   // Статус задачи
-
 
     public Task(String name, String description, TaskStatus status) {
         this.name = name;

@@ -1,4 +1,4 @@
-package test.model;
+package task;
 
 import model.Epic;
 import org.junit.jupiter.api.Test;

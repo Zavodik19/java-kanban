@@ -2,91 +2,90 @@ package manager;
 
 import model.Task;
 
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final HashMap<Integer, Node> history = new HashMap<>();
-    private Node first;
-    private Node last;
+    private static class Node {
+        Task item;
+        Node next;
+        Node prev;
+
+        Node(Node prev, Task task, Node next) {
+            this.item = task;
+            this.next = next;
+            this.prev = prev;
+        }
+    }
+
+    HashMap<Integer, Node> taskHistory = new HashMap<>();
+    Node first;
+    Node last;
+
 
     @Override
     public void add(Task task) {
-        int id = task.getId();
-        Node existingNode = history.get(id);
-
-        if (existingNode != null) {
-            removeNode(existingNode);
+        Node node = taskHistory.get(task.getId());
+        if (node != null) {
+            removeNode(node);
         }
-
-        Node newNode = linkLast(task);
-        history.put(id, newNode);
+        taskHistory.put(task.getId(), linkLast(task));
     }
 
-    @Override
-    public void remove(int id) {
-        Node nodeToRemove = history.get(id);
-        if (nodeToRemove != null) {
-            removeNode(nodeToRemove);
-            history.remove(id);
-        }
-    }
 
     @Override
     public List<Task> getHistory() {
-        List<Task> tasks = new ArrayList<>(history.size());
+        ArrayList<Task> list = new ArrayList<>();
         Node current = first;
         while (current != null) {
-            tasks.add(current.task);
+            list.add(current.item);
             current = current.next;
         }
-        return tasks;
+        return list;
     }
 
-    private static class Node {
-        public Task task;
-        public Node prev;
-        public Node next;
-
-        Node(Node prev, Task task, Node next) {
-            this.prev = prev;
-            this.task = task;
-            this.next = next;
+    @Override  // Удаление из связанного списка
+    public void remove(int id) {
+        Node node = taskHistory.get(id);
+        if (node != null) {
+            removeNode(node);
         }
     }
 
-    private Node linkLast(Task task) {
-        Node newNode = new Node(last, task, null);
-        if (first == null) {
+    Node linkLast(Task task) {
+        final Node lastNode = last;
+        final Node newNode = new Node(lastNode, task, null);
+        last = newNode;
+        if (lastNode == null) {
             first = newNode;
-        } else if (last == null) {
-            last = newNode;
-            first.next = last;
-            last.prev = first;
         } else {
-            last.next = newNode;
-            newNode.prev = last;
-            last = newNode;
+            lastNode.next = newNode;
         }
         return newNode;
     }
 
-    private void removeNode(Node node) {
-        if (node == first) {
-            first = node.next;
-            if (first != null) {
-                first.prev = null;
-            } else {
+    void removeNode(Node node) {
+        final Node nextNode = node.next;
+        final Node prevNode = node.prev;
+
+        if (prevNode == null) { // Если удаляемый узел является первым
+            if (nextNode != null) { // Проверка, что nextNode не null
+                first = nextNode;
+                nextNode.prev = null;
+            } else { // Если список содержит только один узел
+                first = null;
                 last = null;
             }
-        } else if (node == last) {
-            last = node.prev;
-            last.next = null;
+        } else if (nextNode == null) { // Если удаляемый узел является последним
+            last = prevNode;
+            prevNode.next = null;
         } else {
-            node.prev.next = node.next;
-            node.next.prev = node.prev;
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
         }
+        taskHistory.remove(node.item.getId());
     }
 }
+
