@@ -34,7 +34,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         taskHistory.put(task.getId(), linkLast(task));
     }
 
-
     @Override
     public List<Task> getHistory() {
         ArrayList<Task> list = new ArrayList<>();
