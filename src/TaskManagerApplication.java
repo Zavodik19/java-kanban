@@ -51,5 +51,3 @@ public class TaskManagerApplication {
         System.out.println("Обновленные подзадачи: " + inMemoryTaskManager.getAllSubTasks());
     }
 }
-
-
