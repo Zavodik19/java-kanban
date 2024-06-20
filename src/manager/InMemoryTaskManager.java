@@ -11,9 +11,9 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final HashMap<Integer, SubTask> subtasks;
-    private final HashMap<Integer, Epic> epics;
-    private final HashMap<Integer, Task> tasks;
+    protected final HashMap<Integer, SubTask> subtasks;
+    protected final HashMap<Integer, Epic> epics;
+    protected final HashMap<Integer, Task> tasks;
     private int taskId = 1;
     private List<Task> history;
     private final HistoryManager historyManager;
@@ -61,7 +61,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getAllTask() {  // Получение всех задач
+    public List<Task> getAllTasks() {  // Получение всех задач
         return new ArrayList<>(tasks.values());
     }
 

@@ -22,6 +22,12 @@ public class SubTask extends Task {
     }
 
     @Override
+    public TaskType getTaskType() {
+        return TaskType.SUBTASK;
+    }
+
+
+    @Override
     public String toString() {
         return "model.SubTask{" +
                 "epicId=" + epicId +

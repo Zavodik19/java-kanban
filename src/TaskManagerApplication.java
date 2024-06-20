@@ -1,14 +1,7 @@
-import manager.Managers;
-import manager.TaskManager;
-import model.Epic;
-import model.SubTask;
-import model.Task;
-import model.TaskStatus;
-
 public class TaskManagerApplication {
     public static void main(String[] args) {
 
-        TaskManager inMemoryTaskManager = Managers.getDefault();
+        /* TaskManager inMemoryTaskManager = Managers.getDefault();
 
         // Создаем задачи
         Task task1 = new Task("Сделать уборку", "Сделать уборку за 2 часа", TaskStatus.NEW);
@@ -37,7 +30,7 @@ public class TaskManagerApplication {
         inMemoryTaskManager.addSubTask(subtask2);
 
         // Выводим все задачи, эпики и подзадачи
-        System.out.println("Все задачи: " + inMemoryTaskManager.getAllTask());
+        System.out.println("Все задачи: " + inMemoryTaskManager.getAllTasks());
         System.out.println("Все эпики: " + inMemoryTaskManager.getAllEpics());
         System.out.println("Все подзадачи: " + inMemoryTaskManager.getAllSubTasks());
 
@@ -46,8 +39,8 @@ public class TaskManagerApplication {
         inMemoryTaskManager.deleteEpic(epic2.getId());
 
         // Выводим списки задач
-        System.out.println("\nОбновленные задачи: " + inMemoryTaskManager.getAllTask());
+        System.out.println("\nОбновленные задачи: " + inMemoryTaskManager.getAllTasks());
         System.out.println("Обновленные эпики: " + inMemoryTaskManager.getAllEpics());
-        System.out.println("Обновленные подзадачи: " + inMemoryTaskManager.getAllSubTasks());
+        System.out.println("Обновленные подзадачи: " + inMemoryTaskManager.getAllSubTasks()); */
     }
 }
