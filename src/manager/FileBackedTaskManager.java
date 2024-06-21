@@ -1,6 +1,7 @@
 package manager;
 
 import exception.ManagerSaveException;
+import exception.TaskManagerLoadException;
 import model.*;
 
 import java.io.*;
@@ -11,7 +12,7 @@ import java.util.List;
 import static model.TaskType.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
-    File createFile = new File("resources/file.csv");
+    private final File createFile = new File("resources/file.csv"); // Добавлен private final
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -20,9 +21,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
 
-    public void save() throws ManagerSaveException {
+    public void save() {  // Убрано: throws ManagerSaveException
         try (Writer writer = new FileWriter(file, StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic \n"); // заголовки таблицы
+            writer.write("id,type,name,status,description,epic \n");
             List<Task> taskList = new ArrayList<>();
             taskList.addAll(tasks.values());
             taskList.addAll(epics.values());
@@ -58,33 +59,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
 
     public static FileBackedTaskManager loadFromFile(File file) {
-        FileBackedTaskManager manager = new FileBackedTaskManager(file); // Исправлено: передаем файл в конструктор
+        FileBackedTaskManager manager = new FileBackedTaskManager(file);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            reader.readLine(); // Пропускаем строку с заголовками
+            reader.readLine();
             while ((line = reader.readLine()) != null) {
-                if (!line.isBlank()) { // Проверяем, не пустая ли строка
-                    Task task = fromString(line); // Используем статический метод fromString
-                    manager.addTask(task); // Добавляем задачу в менеджер
+                if (!line.isBlank()) {
+                    Task task = fromString(line);
+                    manager.addTask(task);
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {  // Добавлен проброс собственного исключения
+            throw new TaskManagerLoadException("Ошибка при загрузке задач из файла", e);
         }
         return manager;
     }
 
 
     public static Task fromString(String value) {
-        String[] parts = value.split(",\\s*"); // Разделяем строку по запятой и пробелам
+        String[] parts = value.split(",\\s*");
         if (parts.length < 5) {
             throw new IllegalArgumentException("Недостаточно данных для создания задачи");
         }
-        int id = Integer.parseInt(parts[0]); // Получаем ID задачи
-        TaskType type = TaskType.valueOf(parts[1]); // Получаем тип задачи
-        String name = parts[2].trim(); // Получаем имя задачи
-        TaskStatus status = TaskStatus.valueOf(parts[3]); // Получаем статус задачи
-        String description = parts[4].trim(); // Получаем описание задачи
+        int id = Integer.parseInt(parts[0]);
+        TaskType type = TaskType.valueOf(parts[1]);
+        String name = parts[2].trim();
+        TaskStatus status = TaskStatus.valueOf(parts[3]);
+        String description = parts[4].trim();
 
         switch (type) {
             case TASK:
@@ -92,7 +93,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case EPIC:
                 return new Epic(name, description);
             case SUBTASK:
-                int epicId = Integer.parseInt(parts[5]); // Получаем ID эпика для подзадачи
+                int epicId = Integer.parseInt(parts[5]);
                 return new SubTask(name, description, status, epicId);
             default:
                 throw new IllegalArgumentException("Неизвестный тип задачи");
