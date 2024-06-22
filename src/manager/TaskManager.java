@@ -15,7 +15,7 @@ public interface TaskManager {
 
     void updateTask(Task task);
 
-    List<Task> getAllTask();
+    List<Task> getAllTasks();
 
     void deleteAllTask();
 
