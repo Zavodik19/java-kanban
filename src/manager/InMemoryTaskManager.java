@@ -19,8 +19,7 @@ public class InMemoryTaskManager implements TaskManager {
     private List<Task> history;
     private final HistoryManager historyManager;
 
-    protected TreeSet<Task> prioritizedTasks = new TreeSet<>
-            (Comparator.comparing(Task::getStartTime));
+    protected TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
 
     public InMemoryTaskManager() {
