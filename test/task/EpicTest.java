@@ -14,17 +14,18 @@ class EpicTest {
 
     @Test
     void shouldCalculateDurationAndStartTimeForEpic() {
+        LocalDateTime startTime = LocalDateTime.now(); // Сохраняем текущее время в переменную
         Epic epic = new Epic("Epic Name", "Epic Description", TaskStatus.NEW,
-                Duration.ofHours(5), LocalDateTime.now());
+                Duration.ofHours(5), startTime);
         SubTask subTask1 = new SubTask("SubTask 1", "Description 1", TaskStatus.NEW, 1,
-                Duration.ofHours(2), LocalDateTime.now());
+                Duration.ofHours(2), startTime);
         SubTask subTask2 = new SubTask("SubTask 2", "Description 2", TaskStatus.NEW, 1,
-                Duration.ofHours(3), LocalDateTime.now());
+                Duration.ofHours(3), startTime);
 
-        epic.addSubTask(1);
-        epic.addSubTask(2);
+        epic.addSubTask(subTask1.getId());
+        epic.addSubTask(subTask2.getId());
 
         assertEquals(Duration.ofHours(5), epic.getDuration());
-        assertEquals(LocalDateTime.now(), epic.getStartTime());
+        assertEquals(startTime, epic.getStartTime()); // Используем сохранённое время
     }
 }
