@@ -6,95 +6,84 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
-    private final File file = new File("resources/test.csv");
-    private FileBackedTaskManager taskManager;
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+    private File file;
 
+    @Override
     @BeforeEach
-    void setUp() {
+    public void setUp() {
+        try {
+            file = File.createTempFile("test", ".txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Не удалось создать временный файл для тестов.");
+        }
         taskManager = new FileBackedTaskManager(file);
     }
 
 
     @Test
-    public void testSaveAndLoadTasks() throws IOException {
-        // Создаем временный файл
-        File tempFile = File.createTempFile("test", ".csv");
-
-        // Инициализируем менеджер с временным файлом
-        FileBackedTaskManager manager = new FileBackedTaskManager(tempFile);
-        Task task = new Task("Test", "Description", TaskStatus.NEW);
-        manager.addTask(task);
-
-        // Сохраняем задачи в файл
-        manager.save();
-
-        // Загружаем задачи из файла
-        FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
-        Task loadedTask = loadedManager.getTask(task.getId());
-
-        // Проверяем, что задача загрузилась корректно
-        assertEquals(task, loadedTask);
-
-        // Удаляем временный файл
-        assertTrue(tempFile.delete());
-    }
-
-
-    // Тестирование добавления задачи
-    @Test
-    void shouldAddTaskCorrectly() {
-        Task task = new Task("Test Task", "Description", TaskStatus.NEW);
-        taskManager.addTask(task);
-        assertFalse(taskManager.getAllTasks().isEmpty());
-        assertEquals(1, taskManager.getAllTasks().size());
-    }
-
-    // Тестирование удаления задачи
-    @Test
-    void shouldRemoveTaskCorrectly() {
-        Task task = new Task("Test Task", "Description", TaskStatus.NEW);
-        taskManager.addTask(task);
-        int taskId = task.getId();
-        taskManager.deleteTask(taskId);
-        assertTrue(taskManager.getAllTasks().isEmpty());
-    }
-
-    // Тестирование получения списка всех задач
-    @Test
-    void shouldGetAllTasks() {
-        Task task1 = new Task("Test Task 1", "Description", TaskStatus.NEW);
-        Task task2 = new Task("Test Task 2", "Description", TaskStatus.NEW);
-        taskManager.addTask(task1);
-        taskManager.addTask(task2);
-        List<Task> tasks = taskManager.getAllTasks();
-        assertEquals(2, tasks.size());
-    }
-
-    // Тестирование сохранения состояния в файл
-    @Test
-    void shouldSaveStateToFile() {
-        Task task = new Task("Test Task", "Description", TaskStatus.NEW);
-        taskManager.addTask(task);
-        taskManager.save();
-
-        assertTrue(file.exists());
-        assertTrue(file.length() > 0);
-    }
-
-    // Тестирование загрузки состояния из файла
-    @Test
-    void shouldLoadStateFromFile() {
-        Task task = new Task("Test Task", "Description", TaskStatus.NEW);
+    void shouldSaveAndLoadTasks() {
+        LocalDateTime fixedTime = LocalDateTime.of(2024, 6, 27, 10, 0);
+        Task task = new Task("Test Task", "Description", TaskStatus.NEW,
+                Duration.ofHours(1), fixedTime);
         taskManager.addTask(task);
         taskManager.save();
 
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(file);
-        assertEquals(taskManager.getAllTasks(), loadedManager.getAllTasks());
+        Task loadedTask = loadedManager.getTask(task.getId());
+
+        assertEquals(task.getName(), loadedTask.getName());
+        assertEquals(task.getDescription(), loadedTask.getDescription());
+        assertEquals(task.getStatus(), loadedTask.getStatus());
+        assertEquals(task.getDuration(), loadedTask.getDuration());
+        assertEquals(fixedTime, loadedTask.getStartTime());
     }
+
+    @Test
+    void shouldCorrectlyAddTask() {
+        LocalDateTime fixedTime = LocalDateTime.of(2024, 6, 27, 10, 0);
+        Task task = new Task("New Task", "Description", TaskStatus.NEW,
+                Duration.ofHours(1), fixedTime);
+        taskManager.addTask(task);
+        Task retrievedTask = taskManager.getTask(task.getId());
+        assertNotNull(retrievedTask);
+        assertEquals("New Task", retrievedTask.getName());
+    }
+
+    @Test
+    void shouldCorrectlyUpdateTask() {
+        LocalDateTime fixedTime = LocalDateTime.of(2024, 6, 27, 10, 0);
+        Task task = new Task("Update Task", "Description", TaskStatus.NEW,
+                Duration.ofHours(1), fixedTime);
+        int taskId = taskManager.addTask(task).getId();
+        Task updatedTask = new Task("Updated Task", "Updated Description", TaskStatus.DONE,
+                Duration.ofHours(2), fixedTime.plusDays(1));
+        updatedTask.setId(taskId);
+        taskManager.updateTask(updatedTask);
+
+        Task retrievedTask = taskManager.getTask(taskId);
+        assertEquals("Updated Task", retrievedTask.getName());
+        assertEquals("Updated Description", retrievedTask.getDescription());
+        assertEquals(TaskStatus.DONE, retrievedTask.getStatus());
+        assertEquals(Duration.ofHours(2), retrievedTask.getDuration());
+        assertEquals(fixedTime.plusDays(1), retrievedTask.getStartTime());
+    }
+
+    @Test
+    void shouldCorrectlyDeleteTask() {
+        LocalDateTime fixedTime = LocalDateTime.of(2024, 6, 27, 10, 0);
+        Task task = new Task("Delete Task", "Description", TaskStatus.NEW,
+                Duration.ofHours(1), fixedTime);
+        int taskId = taskManager.addTask(task).getId();
+        taskManager.deleteTask(taskId);
+        assertNull(taskManager.getTask(taskId));
+    }
+
 
 }
