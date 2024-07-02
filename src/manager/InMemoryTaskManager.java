@@ -142,7 +142,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask addSubTask(SubTask subTask) {
         subTask.setId(generateId());
-        saveTaskInTreeSet(subTask); // Проверяем пересечение времени перед обновлением
+        saveTaskInTreeSet(subTask); // Теперь проверяется пересечение добавляемой подзадачи по времени
         subtasks.put(subTask.getId(), subTask);
         System.out.println("Добавлена подзадача с ID: " + subTask.getId() + " и статусом: " + subTask.getStatus());
         if (epics.containsKey(subTask.getEpicId())) {
