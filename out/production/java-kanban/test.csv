@@ -1,2 +1,2 @@
-id,type,name,status,description,epic 
-1, TASK, Test Task, NEW, Description
+id,type,name,status,description,epic,duration,startTime
+1,TASK,New Task,NEW,Description,,60,27.06.2024 10:00

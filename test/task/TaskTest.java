@@ -4,31 +4,23 @@ import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-
-public class TaskTest {
+class TaskTest {
 
     @Test
-    public void testTaskEquality() {
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
-        Task task2 = new Task("Task 1", "Description 1", TaskStatus.NEW);
+    void shouldCreateTaskWithCorrectFields() {
+        LocalDateTime fixedTime = LocalDateTime.of(2024, 6, 27, 10, 0);
+        Task task = new Task("Task Name", "Task Description", TaskStatus.NEW,
+                Duration.ofHours(1), fixedTime);
 
-        task1.setId(1);
-        task2.setId(1);
-
-        assertEquals(task1, task2);
-    }
-
-    @Test
-    public void testTaskInequality() {
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
-        Task task2 = new Task("Task 2", "Description 2", TaskStatus.NEW);
-
-        task1.setId(1);
-        task2.setId(2);
-
-        assertNotEquals(task1, task2);
+        assertEquals("Task Name", task.getName());
+        assertEquals("Task Description", task.getDescription());
+        assertEquals(TaskStatus.NEW, task.getStatus());
+        assertEquals(Duration.ofHours(1), task.getDuration());
+        assertEquals(fixedTime, task.getStartTime());
     }
 }

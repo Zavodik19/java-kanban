@@ -3,6 +3,8 @@ import model.Task;
 import model.TaskStatus;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,9 +15,9 @@ class InMemoryHistoryManagerTest {
     @Test
     public void addAndGetHistory() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
+        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW, Duration.ofHours(1), LocalDateTime.now());
         task1.setId(1);
-        Task task2 = new Task("Task 2", "Description 2", TaskStatus.IN_PROGRESS);
+        Task task2 = new Task("Task 2", "Description 2", TaskStatus.IN_PROGRESS, Duration.ofHours(2), LocalDateTime.now().plusHours(1));
         task2.setId(2);
 
         historyManager.add(task1);
@@ -31,9 +33,11 @@ class InMemoryHistoryManagerTest {
     @Test
     public void remove() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
+        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
         task1.setId(1);
-        Task task2 = new Task("Task 2", "Description 2", TaskStatus.IN_PROGRESS);
+        Task task2 = new Task("Task 2", "Description 2", TaskStatus.IN_PROGRESS,
+                Duration.ofHours(2), LocalDateTime.now().plusHours(1));
         task2.setId(2);
 
         historyManager.add(task1);
@@ -50,11 +54,14 @@ class InMemoryHistoryManagerTest {
     @Test
     public void removeNode() {
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW);
+        Task task1 = new Task("Task 1", "Description 1", TaskStatus.NEW,
+                Duration.ofHours(1), LocalDateTime.now());
         task1.setId(1);
-        Task task2 = new Task("Task 2", "Description 2", TaskStatus.IN_PROGRESS);
+        Task task2 = new Task("Task 2", "Description 2", TaskStatus.IN_PROGRESS,
+                Duration.ofHours(2), LocalDateTime.now().plusHours(1));
         task2.setId(2);
-        Task task3 = new Task("Task 3", "Description 3", TaskStatus.DONE);
+        Task task3 = new Task("Task 3", "Description 3", TaskStatus.DONE,
+                Duration.ofHours(3), LocalDateTime.now().plusHours(2));
         task3.setId(3);
 
         historyManager.add(task1);
