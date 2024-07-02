@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
-    private final List<Integer> subTasks;
-    private LocalDateTime endTime;
+    private final List<SubTask> subTasks;
 
     public Epic(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
         super(name, description, status, duration, startTime);
@@ -15,32 +14,44 @@ public class Epic extends Task {
 
     }
 
-    public List<Integer> getSubTasks() {
+    public List<SubTask> getSubTasks() {
         return subTasks;
     }
 
-    public void addSubTask(int subTaskId) {
-        if (subTaskId != getId()) {
-            subTasks.add(subTaskId);
+    public void addSubTask(SubTask subTask) {
+        if (subTask != null && subTask.getId() != getId()) {
+            subTasks.add(subTask);
         }
     }
 
-    public void removeSubTask(int subTaskId) {
-        subTasks.remove(Integer.valueOf(subTaskId));
+    public void removeSubTask(SubTask subTask) {
+        subTasks.remove(subTask);
     }
 
-    public LocalDateTime getEndTimeEpic() {
-        return endTime;
+    // Добавен метод вычисления начального времени Epic
+    public LocalDateTime calculateStartTime() {
+        return subTasks.stream()
+                .map(SubTask::getStartTime)
+                .min(LocalDateTime::compareTo)
+                .orElse(getStartTime()); // Если подзадач нет, возвращаем время начала Epic
     }
 
-    public void setEndTimeEpic(LocalDateTime endTime) {
-        this.endTime = endTime;
+    // Добавен метод вычисления конечного времени Epic
+    public LocalDateTime calculateEndTime() {
+        return subTasks.stream()
+                .map(subTask -> subTask.getStartTime().plus(subTask.getDuration()))
+                .max(LocalDateTime::compareTo)
+                .orElse(getStartTime().plus(getDuration())); // Если подзадач нет,
+        // возвращаем время начала плюс продолжительность Epic
     }
 
-    public void setDurationEpic(Duration duration) {
-        this.duration = duration;
+    // Добавен метод вычисления продолжительности Epic
+    public Duration calculateDuration() {
+        return subTasks.stream()
+                .map(SubTask::getDuration)
+                .reduce(Duration::plus)
+                .orElse(getDuration()); // Если подзадач нет, возвращаем продолжительность Epic
     }
-
 
     @Override
     public TaskType getTaskType() {
