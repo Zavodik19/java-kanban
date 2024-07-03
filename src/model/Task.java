@@ -1,18 +1,26 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
 
-    private int id;              // Уникальный идентификатор задачи для её поиска
-    private String name;         // Название задачи
-    private String description;  // Описание задачи и ее детали
-    private TaskStatus status;   // Статус задачи
+    protected int id;
+    protected String name;
+    protected String description;
+    protected TaskStatus status;
 
-    public Task(String name, String description, TaskStatus status) {
+    // Новые поля duration и startTime
+    protected Duration duration;
+    protected LocalDateTime startTime;
+
+    public Task(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public int getId() {
@@ -51,6 +59,32 @@ public class Task {
         return TaskType.TASK;
     }
 
+    // Новые методы getDuration, setDuration, getStartTime, setStartTime, getEndTime
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    public Integer getIdEpic() {
+        return null;
+    }
+
+
 
     @Override
     public String toString() {
@@ -75,5 +109,4 @@ public class Task {
     public int hashCode() {
         return Objects.hash(id, name, description, status);
     }
-
 }
