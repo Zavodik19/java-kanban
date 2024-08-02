@@ -27,7 +27,7 @@ public class HttpEpicHandlerTest {
     private final HttpTaskServer taskServer;
     private final Gson gson;
 
-    private static final String EPICS_URL = "http://localhost:8080/epics";
+    protected static final String EPICS_URL = "http://localhost:8080/epics";
 
     public HttpEpicHandlerTest() throws IOException {
         manager = new InMemoryTaskManager();
