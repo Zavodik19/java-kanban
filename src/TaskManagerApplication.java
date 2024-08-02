@@ -1,5 +1,5 @@
-public class TaskManagerApplication {
-    public static void main(String[] args) {
+//public class TaskManagerApplication {
+//    public static void main(String[] args) {
 
         /* TaskManager inMemoryTaskManager = Managers.getDefault();
 
@@ -42,5 +42,5 @@ public class TaskManagerApplication {
         System.out.println("\nОбновленные задачи: " + inMemoryTaskManager.getAllTasks());
         System.out.println("Обновленные эпики: " + inMemoryTaskManager.getAllEpics());
         System.out.println("Обновленные подзадачи: " + inMemoryTaskManager.getAllSubTasks()); */
-    }
-}
+//    }
+//}
