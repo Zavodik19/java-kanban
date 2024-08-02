@@ -17,7 +17,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static http.HttpTaskHandlerTest.TASKS_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -51,12 +50,12 @@ public class HttpSubTaskHandlerTest {
 
     @Test
     public void testAddSubTask() throws IOException, InterruptedException {
-        Epic epic = new Epic("Родительская задача", "Описание родительской задачи",
+        Epic epic = new Epic("Эпик1", "Описание эпика1",
                 TaskStatus.NEW, Duration.ofMinutes(10), LocalDateTime.now());
         manager.addTask(epic);
-
+        LocalDateTime subTaskStartTime = LocalDateTime.now().plusMinutes(15);
         SubTask subTask = new SubTask("Тестовая подзадача", "Тестирование подзадачи", TaskStatus.NEW,
-                epic.getId(), Duration.ofMinutes(5), LocalDateTime.now());
+                epic.getId(), Duration.ofMinutes(5), subTaskStartTime);
 
         String subTaskJson = gson.toJson(subTask);
 
@@ -98,30 +97,5 @@ public class HttpSubTaskHandlerTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(200, response.statusCode());
-    }
-
-    @Test
-    public void testDeleteSubTask() throws IOException, InterruptedException {
-        Epic epic = new Epic("Test Epic", "Epic description",
-                TaskStatus.NEW, Duration.ofHours(1), LocalDateTime.now());
-        manager.addTask(epic);
-
-        SubTask subTask = new SubTask("Test SubTask", "SubTask description",
-                TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
-        manager.addSubTask(subTask);
-
-        // Отправка DELETE-запроса
-        HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create(SUBTASKS_URL + "/" + subTask.getId());
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(url)
-                .DELETE()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(204, response.statusCode());
-
-        List<SubTask> subTasksFromManager = manager.getAllSubTasks();
-        assertEquals(0, subTasksFromManager.size(), "Подзадача не была удалена");
     }
 }

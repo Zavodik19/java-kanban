@@ -103,7 +103,7 @@ public class HttpTaskHandlerTest {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(204, response.statusCode(), "Expected status code 204 for successful deletion");
+        assertEquals(204, response.statusCode(), "Ожидаемый код статуса 204 для успешного добавления подзадачи");
         List<Task> tasksFromManager = manager.getAllTasks();
         assertEquals(0, tasksFromManager.size(), "Задача не была удалена");
     }
