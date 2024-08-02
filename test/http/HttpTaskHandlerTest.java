@@ -27,7 +27,7 @@ public class HttpTaskHandlerTest {
     private final HttpTaskServer taskServer;
     private final Gson gson;
 
-    private static final String TASKS_URL = "http://localhost:8080/tasks";
+    protected static final String TASKS_URL = "http://localhost:8080/tasks";
 
     public HttpTaskHandlerTest() throws IOException {
         manager = new InMemoryTaskManager();

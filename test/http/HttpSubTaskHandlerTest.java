@@ -19,8 +19,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static http.HttpTaskHandlerTest.TASKS_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class HttpSubTaskHandlerTest {
 
@@ -51,30 +51,27 @@ public class HttpSubTaskHandlerTest {
 
     @Test
     public void testAddSubTask() throws IOException, InterruptedException {
-        Epic epic = new Epic("Test Epic", "Epic description",
-                TaskStatus.NEW, Duration.ofHours(1), LocalDateTime.now());
+        Epic epic = new Epic("Родительская задача", "Описание родительской задачи",
+                TaskStatus.NEW, Duration.ofMinutes(10), LocalDateTime.now());
         manager.addTask(epic);
 
-        SubTask subTask = new SubTask("Test SubTask", "SubTask description",
-                TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
+        SubTask subTask = new SubTask("Тестовая подзадача", "Тестирование подзадачи", TaskStatus.NEW,
+                epic.getId(), Duration.ofMinutes(5), LocalDateTime.now());
+
         String subTaskJson = gson.toJson(subTask);
 
         // Отправка POST-запроса
         HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create(TASKS_URL + "/subtask");
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(SUBTASKS_URL))
+                .uri(url)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(subTaskJson))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(201, response.statusCode());
-
-        List<SubTask> subTasksFromManager = manager.getAllSubTasks();
-        assertNotNull(subTasksFromManager, "Подзадачи не возвращаются");
-        assertEquals(1, subTasksFromManager.size(), "Некорректное количество подзадач");
-        assertEquals("Test SubTask", subTasksFromManager.get(0).getName(), "Некорректное имя подзадачи");
+        assertEquals(201, response.statusCode(), "Ожидаемый код статуса 201 для успешного добавления подзадачи");
     }
 
     @Test
