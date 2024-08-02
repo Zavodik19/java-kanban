@@ -47,6 +47,12 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
     private void handleAddSubTask(HttpExchange exchange) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody()));
         SubTask subTask = gson.fromJson(reader, SubTask.class);
+
+        if (subTask == null) {
+            sendNotFound(exchange, "Подзадача не может быть null.");
+            return;
+        }
+
         try {
             SubTask createdSubTask = taskManager.addSubTask(subTask);
             String jsonResponse = gson.toJson(createdSubTask);
@@ -54,7 +60,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
         } catch (TaskCrossingTimeException e) {
             sendHasInteractions(exchange, "Подзадача пересекается по времени с другими.");
         } catch (Exception e) {
-            sendNotFound(exchange, "Ошибка при добавлении подзадачи.");
+            sendNotFound(exchange, "Ошибка при добавлении подзадачи: " + e.getMessage());
         }
     }
 
