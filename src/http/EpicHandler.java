@@ -40,7 +40,7 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
     private void handleGetEpics(HttpExchange exchange) throws IOException {
         List<Epic> epics = taskManager.getAllEpics();
         String response = gson.toJson(epics);
-        sendText(exchange, response, 204);
+        sendText(exchange, response, 200);
     }
 
     private void handleAddEpic(HttpExchange exchange) throws IOException {

@@ -64,8 +64,6 @@ public class HttpEpicHandlerTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
-
-        // Проверка добавленного эпика
         List<Epic> epicsFromManager = manager.getAllEpics();
         assertNotNull(epicsFromManager, "Эпики не возвращаются");
         assertEquals(1, epicsFromManager.size(), "Некорректное количество эпиков");
@@ -106,7 +104,6 @@ public class HttpEpicHandlerTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(204, response.statusCode());
-
         List<Epic> epicsFromManager = manager.getAllEpics();
         assertEquals(0, epicsFromManager.size(), "Эпик не был удален");
     }

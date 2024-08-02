@@ -64,8 +64,6 @@ public class HttpTaskHandlerTest {
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         assertEquals(201, response.statusCode());
-
-        // Проверка добавленной задачи
         List<Task> tasksFromManager = manager.getAllTasks();
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
@@ -92,23 +90,22 @@ public class HttpTaskHandlerTest {
 
     @Test
     public void testDeleteTask() throws IOException, InterruptedException {
-        Task task = new Task("Test Task", "Testing task",
-                TaskStatus.NEW, Duration.ofMinutes(5), LocalDateTime.now());
+        Task task = new Task("Test Task", "Testing task", TaskStatus.NEW,
+                Duration.ofMinutes(5), LocalDateTime.now());
         manager.addTask(task);
 
         // Отправка DELETE-запроса
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create(TASKS_URL + task.getId());
+        URI url = URI.create(TASKS_URL + "/" + task.getId());
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(url)
                 .DELETE()
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        assertEquals(204, response.statusCode());
-
-        // Проверка, что задача удалена
+        assertEquals(204, response.statusCode(), "Expected status code 204 for successful deletion");
         List<Task> tasksFromManager = manager.getAllTasks();
         assertEquals(0, tasksFromManager.size(), "Задача не была удалена");
     }
+
 }

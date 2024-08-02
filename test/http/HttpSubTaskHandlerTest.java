@@ -63,7 +63,7 @@ public class HttpSubTaskHandlerTest {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(SUBTASKS_URL))
-                .header("Content-Type", "application/json") // Убедитесь, что заголовок установлен
+                .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(subTaskJson))
                 .build();
 
@@ -83,11 +83,11 @@ public class HttpSubTaskHandlerTest {
         manager.addTask(epic);
 
         SubTask subTask1 = new SubTask("Test SubTask 1", "SubTask description",
-                TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now());
+                TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now().plusHours(2));
         manager.addSubTask(subTask1);
 
         SubTask subTask2 = new SubTask("Test SubTask 2", "SubTask description",
-                TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now().plusMinutes(40));
+                TaskStatus.NEW, epic.getId(), Duration.ofMinutes(30), LocalDateTime.now().plusHours(3));
         manager.addSubTask(subTask2);
 
         // Отправка GET-запроса

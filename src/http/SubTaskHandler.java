@@ -41,7 +41,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
     private void handleGetSubTasks(HttpExchange exchange) throws IOException {
         List<SubTask> subTasks = taskManager.getAllSubTasks();
         String response = gson.toJson(subTasks);
-        sendText(exchange, response, 204);
+        sendText(exchange, response, 200);
     }
 
     private void handleAddSubTask(HttpExchange exchange) throws IOException {
@@ -56,7 +56,7 @@ public class SubTaskHandler extends BaseHttpHandler implements HttpHandler {
         try {
             SubTask createdSubTask = taskManager.addSubTask(subTask);
             String jsonResponse = gson.toJson(createdSubTask);
-            sendText(exchange, jsonResponse, 201);
+            sendCreated(exchange, jsonResponse);
         } catch (TaskCrossingTimeException e) {
             sendHasInteractions(exchange, "Подзадача пересекается по времени с другими.");
         } catch (Exception e) {
