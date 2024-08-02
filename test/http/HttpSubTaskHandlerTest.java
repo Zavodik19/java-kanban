@@ -64,6 +64,7 @@ public class HttpSubTaskHandlerTest {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(SUBTASKS_URL))
                 .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(subTaskJson))
                 .build();
 
