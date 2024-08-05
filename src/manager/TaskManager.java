@@ -1,5 +1,6 @@
 package manager;
 
+import com.google.gson.Gson;
 import model.Epic;
 import model.SubTask;
 import model.Task;
@@ -12,6 +13,9 @@ public interface TaskManager {
     Task getTask(int id);
 
     void deleteTask(int id);
+
+    Gson createGson();
+
 
     void updateTask(Task task);
 

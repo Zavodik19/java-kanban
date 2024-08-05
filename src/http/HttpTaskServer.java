@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class HttpTaskServer {
     private static HttpServer httpServer;
     private final TaskManager taskManager;
-    private static final Gson gson = createGson();
+    private static final Gson gson = Managers.createGson(); // Вызов метода создания Gson из нового местоположения
 
     public HttpTaskServer(TaskManager taskManager) {
         this.taskManager = taskManager;
