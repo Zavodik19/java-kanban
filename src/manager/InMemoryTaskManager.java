@@ -1,12 +1,18 @@
 package manager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import exception.ErrorSavingTasksException;
 import exception.TaskCrossingTimeException;
+import http.adapter.DurationAdapter;
+import http.adapter.LocalDateTimeAdapter;
 import model.Epic;
 import model.SubTask;
 import model.Task;
 import model.TaskStatus;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +38,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     private int generateId() {   // Генерация ID задачи
         return taskId++;
+    }
+
+
+    @Override
+    public Gson createGson() {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .serializeNulls()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
     }
 
 
